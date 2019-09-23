@@ -30,14 +30,7 @@ impl Token {
     }
 
     fn alphabet(&self) -> Alphabet {
-        match to_char(self.text.as_str()) {
-            '\u{4E00}'..='\u{9FCF}' => Alphabet::Kanji,
-            '\u{F900}'..='\u{FAFF}' => Alphabet::Kanji,
-            '\u{3400}'..='\u{4DBF}' => Alphabet::Kanji,
-            '\u{3040}'..='\u{309F}' => Alphabet::Hiragana,
-            '\u{30A0}'..='\u{30FF}' => Alphabet::Katakana,
-            _ => Alphabet::Other,
-        }
+        define_alphabet(self.text.as_str())
     }
 
     fn to_ruby(&self) -> String {
@@ -69,4 +62,24 @@ fn parse(text: &str) -> Vec<Token> {
         .map(|token| Token::new(token.clone().text, &token.clone().detail.reading))
         .collect::<Vec<Token>>();
     parsed_tokens
+}
+
+fn to_katakana(hiragana: &str) -> String {
+    let hiragana_ch = hiragana.chars().next().unwrap() as u32;
+    std::char::from_u32(hiragana_ch + 96).unwrap().to_string()
+}
+fn to_hiragana(katakana: &str) -> String {
+    let katakana_ch = katakana.chars().next().unwrap() as u32;
+    std::char::from_u32(katakana_ch - 96).unwrap().to_string()
+}
+
+fn define_alphabet(text: &str) -> Alphabet {
+    match to_char(text) {
+        '\u{4E00}'..='\u{9FCF}' => Alphabet::Kanji,
+        '\u{F900}'..='\u{FAFF}' => Alphabet::Kanji,
+        '\u{3400}'..='\u{4DBF}' => Alphabet::Kanji,
+        '\u{3040}'..='\u{309F}' => Alphabet::Hiragana,
+        '\u{30A0}'..='\u{30FF}' => Alphabet::Katakana,
+        _ => Alphabet::Other,
+    }
 }
