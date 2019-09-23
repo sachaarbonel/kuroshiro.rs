@@ -1,6 +1,10 @@
 use kuromoji::Tokenizer;
+
+#[allow(dead_code)]
 struct Kuroshiro;
+
 impl Kuroshiro {
+    #[allow(dead_code)]
     fn convert(text: &str) -> String {
         let mut tokenizer = Tokenizer::normal();
         let tokens = tokenizer.tokenize(text);
@@ -12,43 +16,56 @@ impl Kuroshiro {
         let converted_tokens = parsed_tokens.join("");
         converted_tokens
     }
-}
 
-struct Token<'a> {
-    text: &'a str,
+    #[allow(dead_code)]
+    fn parse(text: &str) -> Vec<Token> {
+        let mut tokenizer = Tokenizer::normal();
+        let tokens = tokenizer.tokenize(text);
+        let parsed_tokens = tokens
+            .as_slice()
+            .iter()
+            .map(|token| Token::new(token.clone().text, &token.clone().detail.reading)) //
+            .collect::<Vec<Token>>();
+        parsed_tokens
+    }
+}
+#[derive(Clone)]
+struct Token {
+    text: String,
     reading: String,
 }
 
-impl<'a> Token<'a> {
-    fn new(text: &'a str, reading: &String) -> Token<'a> {
+impl Token {
+    fn new(text: &str, reading: &String) -> Token {
         Token {
-            text: text,
+            text: String::from(text),
             reading: reading.to_owned(),
         }
     }
 }
 
+#[allow(dead_code)]
 fn is_kanji(text: &str) -> bool {
-    match toChar(text) {
-        '\u{4E00}'...'\u{9FCF}' => true,
-        '\u{F900}'...'\u{FAFF}' => true,
-        '\u{3400}'...'\u{4DBF}' => true,
+    match to_char(text) {
+        '\u{4E00}'..='\u{9FCF}' => true,
+        '\u{F900}'..='\u{FAFF}' => true,
+        '\u{3400}'..='\u{4DBF}' => true,
         _ => false,
     }
 }
-
-fn isHiragana(text: &str) -> bool {
-    match toChar(text) {
-        '\u{3040}'...'\u{309F}' => true,
+#[allow(dead_code)]
+fn is_hiragana(text: &str) -> bool {
+    match to_char(text) {
+        '\u{3040}'..='\u{309F}' => true,
         _ => false,
     }
 }
-fn toChar(text: &str) -> char {
+fn to_char(text: &str) -> char {
     text.chars().next().unwrap()
 }
-fn isKatakana(text: &str) -> bool {
-    match toChar(text) {
-        '\u{30A0}'...'\u{30FF}' => true,
+fn is_katakana(text: &str) -> bool {
+    match to_char(text) {
+        '\u{30A0}'..='\u{30FF}' => true,
         _ => false,
     }
 }
@@ -64,5 +81,5 @@ fn main() {
     //     println!("{}", unicode);
     // }
 
-    println!("{}", isKatakana(&"デ"));
+    println!("{}", is_katakana(&"デ"));
 }
