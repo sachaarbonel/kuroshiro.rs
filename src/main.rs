@@ -28,8 +28,8 @@ impl<'a> Token<'a> {
     }
 }
 
-fn is_kanji(data: &char) -> bool {
-    match *data {
+fn is_kanji(text: &str) -> bool {
+    match toChar(text) {
         '\u{4E00}'...'\u{9FCF}' => true,
         '\u{F900}'...'\u{FAFF}' => true,
         '\u{3400}'...'\u{4DBF}' => true,
@@ -37,15 +37,17 @@ fn is_kanji(data: &char) -> bool {
     }
 }
 
-fn isHiragana(data: &char) -> bool {
-    match *data {
+fn isHiragana(text: &str) -> bool {
+    match toChar(text) {
         '\u{3040}'...'\u{309F}' => true,
         _ => false,
     }
 }
-
-fn isKatakana(data: &char) -> bool {
-    match *data {
+fn toChar(text: &str) -> char {
+    text.chars().next().unwrap()
+}
+fn isKatakana(text: &str) -> bool {
+    match toChar(text) {
         '\u{30A0}'...'\u{30FF}' => true,
         _ => false,
     }
@@ -62,5 +64,5 @@ fn main() {
     //     println!("{}", unicode);
     // }
 
-    println!("{}", isKatakana(&"デ".chars().next().unwrap()));
+    println!("{}", isKatakana(&"デ"));
 }
