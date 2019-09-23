@@ -8,4 +8,11 @@ edition = "2018"
 
 [dependencies]
 kuromoji = { git = "https://github.com/fulmicoton/kuromoji-rs" }
-unicase = "2.5.1"
+
+[lib]
+name = "kuroshiro"
+path = "src/lib.rs"
+
+[[bin]]
+name = "kuroshiro"
+path = "src/bin.rs"
