@@ -36,6 +36,12 @@ fn is_kanji(data: &char) -> bool {
         _ => false,
     }
 }
+fn isHiragana(data: &char) -> bool {
+    match *data {
+        '\u{3040}'...'\u{309F}' => true,
+        _ => false,
+    }
+}
 
 fn main() {
     // let romaji = Kuroshiro::convert(
@@ -49,5 +55,5 @@ fn main() {
     //     println!("{}", unicode);
     // }
 
-    println!("{}", is_kanji(&"項".chars().next().unwrap()));
+    println!("{}", isHiragana(&"ひ".chars().next().unwrap()));
 }
