@@ -29,6 +29,7 @@ impl Kuroshiro {
         parsed_tokens
     }
 }
+
 #[derive(Clone)]
 struct Token {
     text: String,
@@ -42,44 +43,42 @@ impl Token {
             reading: reading.to_owned(),
         }
     }
+
+    #[allow(dead_code)]
+    fn alphabet(&self) -> Alphabet {
+        match to_char(self.text.as_str()) {
+            '\u{4E00}'..='\u{9FCF}' => Alphabet::Kanji,
+            '\u{F900}'..='\u{FAFF}' => Alphabet::Kanji,
+            '\u{3400}'..='\u{4DBF}' => Alphabet::Kanji,
+            '\u{3040}'..='\u{309F}' => Alphabet::Hiragana,
+            '\u{30A0}'..='\u{30FF}' => Alphabet::Katakana,
+            _ => Alphabet::Other,
+        }
+    }
 }
 
-#[allow(dead_code)]
-fn is_kanji(text: &str) -> bool {
-    match to_char(text) {
-        '\u{4E00}'..='\u{9FCF}' => true,
-        '\u{F900}'..='\u{FAFF}' => true,
-        '\u{3400}'..='\u{4DBF}' => true,
-        _ => false,
-    }
+#[derive(Debug)]
+enum Alphabet {
+    Kanji,
+    Hiragana,
+    Katakana,
+    Other,
 }
-#[allow(dead_code)]
-fn is_hiragana(text: &str) -> bool {
-    match to_char(text) {
-        '\u{3040}'..='\u{309F}' => true,
-        _ => false,
-    }
-}
+
 fn to_char(text: &str) -> char {
     text.chars().next().unwrap()
 }
-fn is_katakana(text: &str) -> bool {
-    match to_char(text) {
-        '\u{30A0}'..='\u{30FF}' => true,
-        _ => false,
-    }
-}
-fn main() {
-    // let romaji = Kuroshiro::convert(
-    //     "本項で解説する地方病とは、山梨県における日本住血吸虫症の呼称であり、\
-    //      長い間その原因が明らかにならず住民を苦しめた感染症である。",
-    // );
-    // println!("{}", romaji);
-    //  let heart: String = "項".escape_unicode().collect();
-    //println!("{}", heart);
-    // for unicode in "項".escape_unicode() {
-    //     println!("{}", unicode);
-    // }
 
-    println!("{}", is_katakana(&"デ"));
+fn main() {
+    let tokens = Kuroshiro::parse(
+        "本項で解説する地方病とは、山梨県における日本住血吸虫症の呼称であり、\
+         長い間その原因が明らかにならず住民を苦しめた感染症である。",
+    );
+
+    for token in tokens {
+        match token.alphabet() {
+            Alphabet::Kanji => println!("<ruby>{}<rt>{}</rt></ruby>", token.text, token.reading),
+            _ => println!("{}", token.text),
+        }
+    }
 }
