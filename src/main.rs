@@ -36,6 +36,7 @@ fn is_kanji(data: &char) -> bool {
         _ => false,
     }
 }
+
 fn isHiragana(data: &char) -> bool {
     match *data {
         '\u{3040}'...'\u{309F}' => true,
@@ -43,6 +44,12 @@ fn isHiragana(data: &char) -> bool {
     }
 }
 
+fn isKatakana(data: &char) -> bool {
+    match *data {
+        '\u{30A0}'...'\u{30FF}' => true,
+        _ => false,
+    }
+}
 fn main() {
     // let romaji = Kuroshiro::convert(
     //     "本項で解説する地方病とは、山梨県における日本住血吸虫症の呼称であり、\
@@ -55,5 +62,5 @@ fn main() {
     //     println!("{}", unicode);
     // }
 
-    println!("{}", isHiragana(&"ひ".chars().next().unwrap()));
+    println!("{}", isKatakana(&"デ".chars().next().unwrap()));
 }
