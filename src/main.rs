@@ -1,5 +1,4 @@
 use kuromoji::Tokenizer;
-
 struct Kuroshiro;
 impl Kuroshiro {
     fn convert(text: &str) -> String {
@@ -15,23 +14,40 @@ impl Kuroshiro {
     }
 }
 
-// struct Token<'a> {
-//     text: &'a str,
-//     reading: String,
-// }
+struct Token<'a> {
+    text: &'a str,
+    reading: String,
+}
 
-// impl<'a> Token<'a> {
-//     fn new(text: &'a str, reading: &String) -> Token<'a> {
-//         Token {
-//             text: text,
-//             reading: reading.to_owned(),
-//         }
-//     }
-// }
+impl<'a> Token<'a> {
+    fn new(text: &'a str, reading: &String) -> Token<'a> {
+        Token {
+            text: text,
+            reading: reading.to_owned(),
+        }
+    }
+}
+
+fn is_kanji(data: &char) -> bool {
+    match *data {
+        '\u{4E00}'...'\u{9FCF}' => true,
+        '\u{F900}'...'\u{FAFF}' => true,
+        '\u{3400}'...'\u{4DBF}' => true,
+        _ => false,
+    }
+}
+
 fn main() {
-    let romaji = Kuroshiro::convert(
-        "本項で解説する地方病とは、山梨県における日本住血吸虫症の呼称であり、\
-         長い間その原因が明らかにならず住民を苦しめた感染症である。",
-    );
-    println!("{}", romaji);
+    // let romaji = Kuroshiro::convert(
+    //     "本項で解説する地方病とは、山梨県における日本住血吸虫症の呼称であり、\
+    //      長い間その原因が明らかにならず住民を苦しめた感染症である。",
+    // );
+    // println!("{}", romaji);
+    //  let heart: String = "項".escape_unicode().collect();
+    //println!("{}", heart);
+    // for unicode in "項".escape_unicode() {
+    //     println!("{}", unicode);
+    // }
+
+    println!("{}", is_kanji(&"項".chars().next().unwrap()));
 }
